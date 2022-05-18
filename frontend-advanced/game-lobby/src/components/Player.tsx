@@ -6,7 +6,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import { PlayerColourContext } from './context/PlayerColourContext';
-
+import Error from './Error';
 interface Props {
   playerName: string;
 }
@@ -16,40 +16,35 @@ const Player: React.FC<Props> = ({ playerName }) => {
     React.useContext(PlayerColourContext);
 
   const changeColour = (currColour: String, newColour: String) => {
-    console.log('inside change colour');
-    console.log(selectedColours);
     let updatedColours: Array<String> = [...selectedColours];
     if (currColour !== '') {
       let index = selectedColours.indexOf(currColour);
       updatedColours.splice(index, 1);
-      console.log('removed curr colour');
     }
-    console.log(updatedColours);
     if (newColour !== '') {
       updatedColours.push(newColour);
-      console.log('added new colour');
     }
-    console.log(updatedColours);
     updateSelectedColours(updatedColours);
   };
+  const [isErrorPanelOpen, toggleErrorPanel] = React.useState<boolean>(false);
 
   const [colour, setColour] = React.useState('');
 
   const handleChange = (event: SelectChangeEvent) => {
     let newColour: string = event.target.value as string;
-    console.log(newColour);
-    console.log(colour);
     if (newColour !== colour) {
       if (selectedColours.includes(newColour)) {
         // TODO: Use UI Error message
-        console.error('ERR: colour is taken');
+        // console.error(
+        //   'ERR: ' +
+        //     newColour +
+        //     ' is taken. Please choose a different colour instead.'
+        // );
+        toggleErrorPanel(true);
       } else {
-        // Assumption: colour change should always add colour to selectedColours
-        console.log('before the change');
-        console.log(selectedColours);
+        // Close in case it's open
+        toggleErrorPanel(false);
         changeColour(colour, newColour);
-        console.log('after the change');
-        console.log(selectedColours);
         setColour(newColour);
       }
     }
@@ -68,6 +63,13 @@ const Player: React.FC<Props> = ({ playerName }) => {
       <Typography align='center' variant='h4'>
         {playerName}
       </Typography>
+      {isErrorPanelOpen && (
+        <Error
+          isOpen={isErrorPanelOpen}
+          message={'The colour chosen is taken. Please choose another one.'}
+          closeMsg={toggleErrorPanel}
+        />
+      )}
       <FormControl sx={{ m: 2, width: '75%' }} size='small'>
         <InputLabel id='colour-select-label'>Choose player colour</InputLabel>
 

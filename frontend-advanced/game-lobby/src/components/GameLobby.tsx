@@ -4,9 +4,8 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Header from './Header';
 import Player from './Player';
-// import { PlayerColourContext } from './context/PlayerColourContext';
 
-const GameLobby = () => {
+const GameLobby: React.FC = () => {
   return (
     // Want four players, for now
     <Container maxWidth='md'>
