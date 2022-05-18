@@ -10,22 +10,26 @@ import { PlayerColourContext } from './context/PlayerColourContext';
 interface Props {
   playerName: string;
 }
+
 const Player: React.FC<Props> = ({ playerName }) => {
   const { selectedColours, updateSelectedColours } =
     React.useContext(PlayerColourContext);
 
-  const addColour = (colour: String) => {
-    console.log('inside add colour');
-    let updatedColours: Array<String> = [...selectedColours, colour];
-    console.log(updatedColours);
-    updateSelectedColours(updatedColours);
-  };
-
-  const removeColour = (colour: String) => {
-    console.log('inside remove colour');
+  const changeColour = (currColour: String, newColour: String) => {
+    console.log('inside change colour');
+    console.log(selectedColours);
     let updatedColours: Array<String> = [...selectedColours];
-    let index = selectedColours.indexOf(colour);
-    updatedColours.splice(index, 1);
+    if (currColour !== '') {
+      let index = selectedColours.indexOf(currColour);
+      updatedColours.splice(index, 1);
+      console.log('removed curr colour');
+    }
+    console.log(updatedColours);
+    if (newColour !== '') {
+      updatedColours.push(newColour);
+      console.log('added new colour');
+    }
+    console.log(updatedColours);
     updateSelectedColours(updatedColours);
   };
 
@@ -41,12 +45,12 @@ const Player: React.FC<Props> = ({ playerName }) => {
         console.error('ERR: colour is taken');
       } else {
         // Assumption: colour change should always add colour to selectedColours
+        console.log('before the change');
         console.log(selectedColours);
-        if (colour !== '') removeColour(colour);
+        changeColour(colour, newColour);
+        console.log('after the change');
         console.log(selectedColours);
-        if (newColour !== '') addColour(newColour);
         setColour(newColour);
-        console.log(selectedColours);
       }
     }
   };

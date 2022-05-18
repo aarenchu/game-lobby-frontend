@@ -48,7 +48,6 @@ function App() {
   const [selectedColours, setSelectedColours] = React.useState([
     'red',
     'green',
-    'blue',
   ]);
   const updateSelectedColours = (colours) => {
     setSelectedColours(colours);
