@@ -5,8 +5,8 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
-import { PlayerColourContext } from './context/PlayerColourContext';
-import Error from './Error';
+import { PlayerColourContext } from '../context/PlayerColourContext';
+import Error from '../Error';
 interface Props {
   playerName: string;
 }
@@ -34,12 +34,6 @@ const Player: React.FC<Props> = ({ playerName }) => {
     let newColour: string = event.target.value as string;
     if (newColour !== colour) {
       if (selectedColours.includes(newColour)) {
-        // TODO: Use UI Error message
-        // console.error(
-        //   'ERR: ' +
-        //     newColour +
-        //     ' is taken. Please choose a different colour instead.'
-        // );
         toggleErrorPanel(true);
       } else {
         // Close in case it's open

@@ -2,10 +2,24 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
-import Header from './Header';
+import Header from '../Header';
 import Player from './Player';
 
 const GameLobby: React.FC = () => {
+  const players = [
+    { userName: 'P1' },
+    { userName: 'P2' },
+    { userName: 'P3' },
+    { userName: 'P4' },
+  ];
+
+  const menuItems = players.map((player) => {
+    return (
+      <Grid key={players.indexOf(player)} item xs={2} sm={4} md={4}>
+        <Player playerName={player.userName} />
+      </Grid>
+    );
+  });
   return (
     // Want four players, for now
     <Container maxWidth='md'>
@@ -18,18 +32,7 @@ const GameLobby: React.FC = () => {
           justifyContent='center'
           justifyItems='center'
         >
-          <Grid item xs={2} sm={4} md={4}>
-            <Player playerName='P1' />
-          </Grid>
-          <Grid item xs={2} sm={4} md={4}>
-            <Player playerName='P2' />
-          </Grid>
-          <Grid item xs={2} sm={4} md={4}>
-            <Player playerName='P3' />
-          </Grid>
-          <Grid item xs={2} sm={4} md={4}>
-            <Player playerName='P4' />
-          </Grid>
+          {menuItems}
         </Grid>
       </Box>
     </Container>
