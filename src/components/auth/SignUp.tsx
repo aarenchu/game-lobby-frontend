@@ -19,6 +19,7 @@ const SignUp: React.FC = () => {
   const [errorPanel, setErrorPanel] = React.useState<string | null>(null);
   const [isErrorPanelOpen, toggleErrorPanel] = React.useState<boolean>(false);
 
+  // Call the functions?
   const navigate = useNavigate();
   const Input = styled('input')({
     display: 'none',

@@ -1,27 +1,36 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Header from '../Header';
 import Player from './Player';
+import { PlayerColourContext } from '../context/PlayerColourContext';
 
 const GameLobby: React.FC = () => {
-  const players = [
-    { userName: 'P1' },
-    { userName: 'P2' },
-    { userName: 'P3' },
-    { userName: 'P4' },
-  ];
+  const [players, setPlayers] = useState([]);
+  const { updateSelectedColours } = React.useContext(PlayerColourContext);
+
+  useEffect(() => {
+    // GET request using fetch inside useEffect React hook
+    fetch(
+      'https://us-central1-game-lobby-training-db0fb.cloudfunctions.net/players/'
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setPlayers(data);
+        let colours = data.map((player) => player.colour);
+        updateSelectedColours(colours);
+      });
+  }, [updateSelectedColours]);
 
   const menuItems = players.map((player) => {
     return (
       <Grid key={players.indexOf(player)} item xs={2} sm={4} md={4}>
-        <Player playerName={player.userName} />
+        <Player playerId={player.id} />
       </Grid>
     );
   });
   return (
-    // Want four players, for now
     <Container maxWidth='md'>
       <Header />
       <Box sx={{ flexGrow: 1 }}>

@@ -19,6 +19,7 @@ const SignIn: React.FC = () => {
   const [isErrorPanelOpen, toggleErrorPanel] = React.useState<boolean>(false);
   const navigate = useNavigate();
 
+  // TODO: Call the functions?
   //   const [signIn] = useLazyQuery(SIGN_IN, {
   //     onCompleted: (data) => {
   //       updateUser(data.signin);

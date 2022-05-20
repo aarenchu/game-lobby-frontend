@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import FormControl from '@mui/material/FormControl';
@@ -7,11 +7,12 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import { PlayerColourContext } from '../context/PlayerColourContext';
 import Error from '../Error';
+
 interface Props {
-  playerName: string;
+  playerId: string;
 }
 
-const Player: React.FC<Props> = ({ playerName }) => {
+const Player: React.FC<Props> = ({ playerId }) => {
   const { selectedColours, updateSelectedColours } =
     React.useContext(PlayerColourContext);
 
@@ -26,9 +27,23 @@ const Player: React.FC<Props> = ({ playerName }) => {
     }
     updateSelectedColours(updatedColours);
   };
-  const [isErrorPanelOpen, toggleErrorPanel] = React.useState<boolean>(false);
+  const [isErrorPanelOpen, toggleErrorPanel] = useState<boolean>(false);
 
-  const [colour, setColour] = React.useState('');
+  const [colour, setColour] = useState('');
+  const [username, setUsername] = useState('');
+
+  useEffect(() => {
+    // GET request using fetch inside useEffect React hook
+    fetch(
+      'https://us-central1-game-lobby-training-db0fb.cloudfunctions.net/players/' +
+        playerId
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setColour(data.colour);
+        setUsername(data.username);
+      });
+  }, [playerId]);
 
   const handleChange = (event: SelectChangeEvent) => {
     let newColour: string = event.target.value as string;
@@ -55,7 +70,7 @@ const Player: React.FC<Props> = ({ playerName }) => {
       }}
     >
       <Typography align='center' variant='h4'>
-        {playerName}
+        {username}
       </Typography>
       {isErrorPanelOpen && (
         <Error
@@ -79,6 +94,11 @@ const Player: React.FC<Props> = ({ playerName }) => {
           <MenuItem value='blue'>blue</MenuItem>
           <MenuItem value='green'>green</MenuItem>
           <MenuItem value='yellow'>yellow</MenuItem>
+          <MenuItem value='pink'>pink</MenuItem>
+          <MenuItem value='purple'>purple</MenuItem>
+          <MenuItem value='orange'>orange</MenuItem>
+          <MenuItem value='navy'>navy</MenuItem>
+          <MenuItem value='teal'>teal</MenuItem>
         </Select>
       </FormControl>
     </Box>
