@@ -8,48 +8,52 @@ import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { auth, logInWithEmailAndPassword } from '../../firebase';
+import { useAuthState } from 'react-firebase-hooks/auth';
 // import { PlayerContext } from '../context/PlayerContext';
 import Error from '../Error';
 
 const SignIn: React.FC = () => {
   const [errorPanel, setErrorPanel] = React.useState<string>('');
-  //   const { updateUser } = React.useContext(PlayerContext);
+  const [user, loading, error] = useAuthState(auth);
   const [isErrorPanelOpen, toggleErrorPanel] = React.useState<boolean>(false);
   const navigate = useNavigate();
 
-  // TODO: Call the functions?
-  //   const [signIn] = useLazyQuery(SIGN_IN, {
-  //     onCompleted: (data) => {
-  //       updateUser(data.signin);
-  //       navigate('/');
-  //     },
-  //     onError: (error) => {
-  //       setErrorPanel(error.message);
-  //     },
-  //   });
+  useEffect(() => {
+    if (loading) {
+      // maybe trigger a loading screen
+      return;
+    }
+    if (user) navigate('/');
+  }, [user, loading, navigate]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const username = data.get('username');
+    const email = data.get('email');
     const password = data.get('password');
 
-    if (!username || !password) {
-      setErrorPanel('Username/Password required.');
+    if (!email || !password) {
+      setErrorPanel('Email/Password required.');
       toggleErrorPanel(true);
       return;
     }
 
-    toggleErrorPanel(false);
+    if (error) {
+      setErrorPanel(error.message);
+      toggleErrorPanel(true);
+      return;
+    }
 
-    // signIn({
-    //   variables: {
-    //     username,
-    //     password,
-    //   },
-    // });
+    try {
+      toggleErrorPanel(false);
+      logInWithEmailAndPassword(email, password);
+    } catch (err) {
+      setErrorPanel(err);
+      toggleErrorPanel(true);
+    }
   };
 
   return (
@@ -81,11 +85,11 @@ const SignIn: React.FC = () => {
             margin='normal'
             required
             fullWidth
-            id='username'
-            label='User'
-            name='username'
+            id='email'
+            label='Email'
+            name='email'
             color='secondary'
-            autoComplete='username'
+            autoComplete='email'
           />
           <TextField
             margin='normal'

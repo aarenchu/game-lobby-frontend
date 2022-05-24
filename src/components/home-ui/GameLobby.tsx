@@ -18,7 +18,12 @@ const GameLobby: React.FC = () => {
       .then((response) => response.json())
       .then((data) => {
         setPlayers(data);
-        let colours = data.map((player) => player.colour);
+        let colours = data.reduce(function (result, player) {
+          if (player.colour !== "''") {
+            result.push(player.colour);
+          }
+          return result;
+        }, []);
         updateSelectedColours(colours);
       });
   }, [updateSelectedColours]);

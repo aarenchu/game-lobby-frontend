@@ -1,5 +1,4 @@
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -7,54 +6,52 @@ import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
-import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { styled } from '@mui/material/styles';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useAuthState } from 'react-firebase-hooks/auth';
 import Error from '../Error';
+import { auth, registerWithEmailAndPassword } from '../../firebase';
 
 const SignUp: React.FC = () => {
   const [errorPanel, setErrorPanel] = React.useState<string | null>(null);
   const [isErrorPanelOpen, toggleErrorPanel] = React.useState<boolean>(false);
 
-  // Call the functions?
+  const [user, loading, error] = useAuthState(auth);
   const navigate = useNavigate();
-  const Input = styled('input')({
-    display: 'none',
-  });
 
-  //   const [signUp] = useMutation(SIGN_UP, {
-  //     onCompleted: () => {
-  //       navigate('/signin');
-  //     },
-  //     onError: (error) => {
-  //       setErrorPanel(error.message);
-  //     },
-  //   });
+  useEffect(() => {
+    if (loading) return;
+    if (user) navigate('/');
+  }, [user, loading, navigate]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    const email = data.get('email');
     const username = data.get('username');
     const password = data.get('password');
 
-    if (!username || !password) {
-      setErrorPanel('Username/Password required.');
+    if (!email || !username || !password) {
+      setErrorPanel('Email/Username/Password required.');
       toggleErrorPanel(true);
       return;
     }
 
-    toggleErrorPanel(false);
+    if (error) {
+      setErrorPanel(error.message);
+      toggleErrorPanel(true);
+      return;
+    }
 
-    console.log('Clicked submit');
-    // signUp({
-    //   variables: {
-    //     username: username,
-    //     password,
-    //   },
-    // });
+    try {
+      toggleErrorPanel(false);
+      registerWithEmailAndPassword(username, email, password);
+    } catch (err) {
+      setErrorPanel(err);
+      toggleErrorPanel(true);
+    }
   };
 
   return (
@@ -92,6 +89,18 @@ const SignUp: React.FC = () => {
               <TextField
                 required
                 fullWidth
+                id='email'
+                label='Email'
+                name='email'
+                type='email'
+                color='secondary'
+                autoComplete='email'
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
                 id='username'
                 label='Username'
                 name='username'
@@ -111,28 +120,6 @@ const SignUp: React.FC = () => {
                 color='secondary'
                 autoComplete='new-password'
               />
-            </Grid>
-            <Grid item xs={12}>
-              <Stack direction='column' alignItems='center' spacing={2}>
-                <Typography component='h5' variant='subtitle1' align='center'>
-                  Upload profile picture
-                </Typography>
-                {/* TODO: Change avatar when profile uploads */}
-                <Avatar component='span' sx={{ width: 100, height: 100 }}>
-                  <AccountCircleIcon sx={{ fontSize: 60 }} />
-                </Avatar>
-                <label htmlFor='contained-button-file'>
-                  <Input
-                    accept='image/*'
-                    id='contained-button-file'
-                    multiple
-                    type='file'
-                  />
-                  <Button variant='contained' component='span'>
-                    Upload
-                  </Button>
-                </label>
-              </Stack>
             </Grid>
           </Grid>
           <Button
