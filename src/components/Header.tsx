@@ -1,22 +1,22 @@
 import React from 'react';
-import Avatar from '@mui/material/Avatar';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
+import Link from '@mui/material/Link';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import { auth, logout } from '../firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import PlayerAvatar from './profile/PlayerAvatar';
 
 const Header: React.FC = () => {
   const [user] = useAuthState(auth);
-  const navigate = useNavigate();
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
@@ -45,8 +45,7 @@ const Header: React.FC = () => {
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title='Open settings'>
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  {/* TODO: Get avatar */}
-                  <Avatar alt='Remy Sharp' src='/static/images/avatar/2.jpg' />
+                  <PlayerAvatar isHeader={true} />
                 </IconButton>
               </Tooltip>
               <Menu
@@ -65,8 +64,10 @@ const Header: React.FC = () => {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                <MenuItem key={'Profile'} component={<RouterLink to='/' />}>
-                  <Typography textAlign='center'>Profile</Typography>
+                <MenuItem key={'Profile'}>
+                  <Link href='/profile' color='inherit' underline='none'>
+                    <Typography textAlign='center'>Profile</Typography>
+                  </Link>
                 </MenuItem>
                 <MenuItem key={'Logout'} onClick={logout}>
                   <Typography textAlign='center'> Logout</Typography>

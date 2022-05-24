@@ -19,7 +19,7 @@ const GameLobby: React.FC = () => {
       .then((data) => {
         setPlayers(data);
         let colours = data.reduce(function (result, player) {
-          if (player.colour !== "''") {
+          if (player.colour && player.colour !== "''") {
             result.push(player.colour);
           }
           return result;
@@ -31,7 +31,7 @@ const GameLobby: React.FC = () => {
   const menuItems = players.map((player) => {
     return (
       <Grid key={players.indexOf(player)} item xs={2} sm={4} md={4}>
-        <Player playerId={player.id} />
+        <Player playerId={player.uid ? player.uid : ''} />
       </Grid>
     );
   });

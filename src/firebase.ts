@@ -7,14 +7,7 @@ import {
   sendPasswordResetEmail,
   signOut,
 } from 'firebase/auth';
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  query,
-  getDocs,
-  where,
-} from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyASAgXoEi2iJwmLpSZZwTcoLHob0R4kdEY',
@@ -28,19 +21,12 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app);
+// Get a reference to the storage service, which is used to create references in your storage bucket
+const storage = getStorage(app);
 
 const logInWithEmailAndPassword = async (email, password) => {
   try {
     await signInWithEmailAndPassword(auth, email, password);
-    // TODO: Use cloud functions?
-    const q = query(
-      collection(db, 'users'),
-      where('uid', '==', auth.currentUser?.uid)
-    );
-    const doc = await getDocs(q);
-    const data = doc.docs[0].data();
-    await updateProfile(auth.currentUser, { displayName: data.username });
   } catch (err) {
     throw err;
   }
@@ -56,15 +42,6 @@ const registerWithEmailAndPassword = async (username, email, password) => {
         throw err;
       }
     );
-
-    // TODO update this with the cloud functions?
-    // await addDoc(collection(db, 'players'), {
-    //   uid: auth.currentUser.uid,
-    //   username,
-    //   authProvider: 'local',
-    //   email,
-    //   colour: '',
-    // });
 
     const requestOptions = {
       method: 'POST',
@@ -98,7 +75,7 @@ const logout = () => {
 };
 export {
   auth,
-  db,
+  storage,
   logInWithEmailAndPassword,
   registerWithEmailAndPassword,
   sendPasswordReset,
