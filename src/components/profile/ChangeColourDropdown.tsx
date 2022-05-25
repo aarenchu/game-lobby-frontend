@@ -17,7 +17,7 @@ const ChangeColourDropdown = () => {
   const { selectedColours } = React.useContext(PlayerColourContext);
   const changeColour = async (event) => {
     let newColour: string = event.target.value as string;
-    if (newColour !== colour) {
+    if (user && user.uid && newColour !== colour) {
       if (selectedColours.includes(newColour)) {
         setErr('Colour is taken. Please choose another one.');
         toggleErrorPanel(true);
@@ -33,7 +33,8 @@ const ChangeColourDropdown = () => {
           };
 
           const response = await fetch(
-            'https://us-central1-game-lobby-training-db0fb.cloudfunctions.net/players/3Ok4kvTnWmlHvOVY0wBn',
+            'https://us-central1-game-lobby-training-db0fb.cloudfunctions.net/players/' +
+              user.uid,
             requestOptions
           );
 
@@ -53,11 +54,10 @@ const ChangeColourDropdown = () => {
 
   useEffect(() => {
     // GET colour of current user
-    if (user) {
-      const uid = user.uid;
+    if (user && user.uid) {
       fetch(
-        'https://us-central1-game-lobby-training-db0fb.cloudfunctions.net/players' +
-          uid
+        'https://us-central1-game-lobby-training-db0fb.cloudfunctions.net/players/' +
+          user.uid
       )
         .then((response) => response.json())
         .then((data) => {

@@ -10,15 +10,22 @@ interface Props {
 const PlayerAvatar: React.FC<Props> = ({ isHeader }) => {
   const [user] = useAuthState(auth);
   const [url, setUrl] = useState('');
-  const profilePicRef =
-    user && user.uid ? ref(storage, 'images/' + user.uid + '.jpg') : null;
+
   useEffect(() => {
+    const profilePicRef =
+      user && user.uid ? ref(storage, 'images/' + user.uid + '.jpg') : null;
     if (profilePicRef) {
-      getDownloadURL(profilePicRef).then((url) => {
-        setUrl(url);
-      });
+      getDownloadURL(profilePicRef)
+        .then((url) => {
+          setUrl(url);
+        })
+        .catch((err) => {
+          if (err.code === 'storage/object-not-found') {
+            setUrl('');
+          }
+        });
     }
-  });
+  }, [user]);
   return (
     <>
       {isHeader && url === '' && <AccountCircleIcon />}
