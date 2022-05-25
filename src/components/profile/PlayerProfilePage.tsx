@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
-// import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 
 import { PlayerColourContext } from '../context/PlayerColourContext';
@@ -55,6 +56,14 @@ const PlayerProfilePage = () => {
               </Typography>
               <UploadPlayerPic />
               <ChangeColourDropdown />
+              <Button
+                component={RouterLink}
+                to='/'
+                color='secondary'
+                variant='contained'
+              >
+                Go Home
+              </Button>
             </Stack>
           </Grid>
           <Grid item xs={12}></Grid>

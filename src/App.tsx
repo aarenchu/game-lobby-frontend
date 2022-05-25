@@ -5,24 +5,24 @@ import { PlayerColourContext } from './components/context/PlayerColourContext';
 import SignIn from './components/auth/SignIn';
 import SignUp from './components/auth/SignUp';
 import PlayerProfilePage from './components/profile/PlayerProfilePage';
-import { PlayerIdContext } from './components/context/PlayerIdContext';
+import { ProfilePicUrlContext } from './components/context/ProfilePicUrlContext';
 
 function App(): JSX.Element {
   // Keep track of the colours that are already selected
   const [selectedColours, setSelectedColours] = React.useState([]);
-  const [playerId, setPlayerId] = React.useState('');
+  const [url, setUrl] = React.useState('');
 
   const updateSelectedColours = (colours) => {
     setSelectedColours(colours);
   };
 
-  const changePlayerId = (pid) => {
-    setPlayerId(pid);
+  const changeProfilePicUrl = (url: string) => {
+    setUrl(url);
   };
 
   return (
     <div className='App'>
-      <PlayerIdContext.Provider value={{ playerId, changePlayerId }}>
+      <ProfilePicUrlContext.Provider value={{ url, changeProfilePicUrl }}>
         <PlayerColourContext.Provider
           value={{ selectedColours, updateSelectedColours }}
         >
@@ -35,7 +35,7 @@ function App(): JSX.Element {
             </Routes>
           </Router>
         </PlayerColourContext.Provider>{' '}
-      </PlayerIdContext.Provider>
+      </ProfilePicUrlContext.Provider>
     </div>
   );
 }

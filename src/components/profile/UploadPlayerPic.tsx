@@ -4,20 +4,24 @@ import Button from '@mui/material/Button';
 import Collapse from '@mui/material/Collapse';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
 import PlayerAvatar from './PlayerAvatar';
-import { styled } from '@mui/material/styles';
 import { auth, storage } from '../../firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { ref, uploadBytesResumable } from 'firebase/storage';
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { ProfilePicUrlContext } from '../context/ProfilePicUrlContext';
 
 const UploadPlayerPic = () => {
   const [user] = useAuthState(auth);
   const [image, setImage] = useState(null);
-  //   const [url, setUrl] = useState('');
+  const [percent, setPercent] = useState(0);
   const [isSuccess, setIsSuccess] = useState(false);
-  const Input = styled('input')({
-    display: 'none',
-  });
+
+  const { changeProfilePicUrl } = React.useContext(ProfilePicUrlContext);
+
+  const handleChange = (e) => {
+    if (e.target.files[0]) setImage(e.target.files[0]);
+  };
 
   const handleUpload = () => {
     // Create the file metadata
@@ -26,23 +30,33 @@ const UploadPlayerPic = () => {
       contentType: 'image/jpeg',
     };
 
-    // Upload file and metadata to the object 'images/mountains.jpg'
+    // Upload file and metadata
     const storageRef = ref(storage, 'images/' + user.uid + '.jpg');
     const uploadTask = uploadBytesResumable(storageRef, image, metadata);
 
     uploadTask.on(
       'state_changed',
-      (snapshot) => {},
+      (snapshot) => {
+        const percent = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        );
+
+        // update progress
+        setPercent(percent);
+      },
       (error) => {
         console.log(error);
       },
       () => {
         // Upload completed successfully, now we can get the download URL
-        setImage(null);
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          changeProfilePicUrl(downloadURL);
+        });
         setIsSuccess(true);
       }
     );
   };
+
   return (
     <>
       {isSuccess && (
@@ -67,22 +81,19 @@ const UploadPlayerPic = () => {
           </Alert>
         </Collapse>
       )}
+      {percent < 100 && percent > 0 && (
+        <Typography variant='subtitle2'> {percent}% done</Typography>
+      )}
 
       <PlayerAvatar isHeader={false} />
-      <label htmlFor='contained-button-file'>
-        <Input
-          accept='image/*'
-          id='contained-button-file'
-          multiple
-          type='file'
-          onChange={(e) => {
-            setImage(e.target.files[0]);
-          }}
-        />
-        <Button variant='contained' component='span'>
-          Choose image
-        </Button>
-      </label>
+      <Typography variant='subtitle2'> Upload new profile picture </Typography>
+      <input
+        accept='image/*'
+        id='contained-button-file'
+        type='file'
+        onChange={handleChange}
+      />
+
       <Button variant='contained' onClick={handleUpload}>
         Upload
       </Button>
