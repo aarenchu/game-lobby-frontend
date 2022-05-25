@@ -54,18 +54,18 @@ const ChangeColourDropdown = () => {
   useEffect(() => {
     // GET colour of current user
     if (user) {
-      //   const uid = user.uid;
-      //   fetch(
-      //     'https://us-central1-game-lobby-training-db0fb.cloudfunctions.net/players' +
-      //       uid
-      //   )
-      //     .then((response) => response.json())
-      //     .then((data) => {
-      //       setColour(data.colour);
-      //     })
-      //     .catch((err) => err);
+      const uid = user.uid;
+      fetch(
+        'https://us-central1-game-lobby-training-db0fb.cloudfunctions.net/players' +
+          uid
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          setColour(data.colour);
+        })
+        .catch((err) => err);
     }
-  });
+  }, [setColour, user]);
   return (
     <>
       {isErrorPanelOpen && (
