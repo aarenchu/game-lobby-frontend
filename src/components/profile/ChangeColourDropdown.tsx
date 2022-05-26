@@ -16,7 +16,7 @@ const ChangeColourDropdown = () => {
   const [colour, setColour] = useState('');
   const { selectedColours } = React.useContext(PlayerColourContext);
   const changeColour = async (event) => {
-    let newColour: string = event.target.value as string;
+    const newColour: string = event.target.value as string;
     if (user && user.uid && newColour !== colour) {
       if (selectedColours.includes(newColour)) {
         setErr('Colour is taken. Please choose another one.');
