@@ -12,15 +12,17 @@ const Player: React.FC<Props> = ({ playerId }) => {
 
   useEffect(() => {
     // GET request using fetch inside useEffect React hook
-    fetch(
-      'https://us-central1-game-lobby-training-db0fb.cloudfunctions.net/players/' +
-        playerId
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        setColour(data.colour);
-        setUsername(data.username);
-      });
+    const fetchPlayer = async () => {
+      const response = await fetch(
+        'https://us-central1-game-lobby-training-db0fb.cloudfunctions.net/players/' +
+          playerId
+      );
+      const data = await response.json();
+      setColour(data.colour);
+      setUsername(data.username);
+    };
+
+    fetchPlayer();
   }, [playerId]);
 
   return (

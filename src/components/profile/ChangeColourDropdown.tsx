@@ -5,7 +5,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import Typography from '@mui/material/Typography';
-import { PlayerColourContext } from '../context/PlayerColourContext';
+import { PlayerColourContext } from '../../context/PlayerColourContext';
 import { auth } from '../../firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 
@@ -53,18 +53,20 @@ const ChangeColourDropdown = () => {
   };
 
   useEffect(() => {
-    // GET colour of current user
-    if (user && user.uid) {
-      fetch(
-        'https://us-central1-game-lobby-training-db0fb.cloudfunctions.net/players/' +
-          user.uid
-      )
-        .then((response) => response.json())
-        .then((data) => {
+    const getColour = async () => {
+      // GET colour of current user
+      if (user && user.uid) {
+        try {
+          const response = await fetch(
+            'https://us-central1-game-lobby-training-db0fb.cloudfunctions.net/players/' +
+              user.uid
+          );
+          const data = await response.json();
           setColour(data.colour);
-        })
-        .catch((err) => err);
-    }
+        } catch (err) {}
+      }
+    };
+    getColour();
   }, [setColour, user]);
   return (
     <>

@@ -34,14 +34,8 @@ const logInWithEmailAndPassword = async (email, password) => {
 const registerWithEmailAndPassword = async (username, email, password) => {
   try {
     // TODO need to catch errors better
-    await createUserWithEmailAndPassword(auth, email, password).catch((err) => {
-      throw err;
-    });
-    await updateProfile(auth.currentUser, { displayName: username }).catch(
-      (err) => {
-        throw err;
-      }
-    );
+    await createUserWithEmailAndPassword(auth, email, password);
+    await updateProfile(auth.currentUser, { displayName: username });
 
     const requestOptions = {
       method: 'POST',

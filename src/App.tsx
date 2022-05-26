@@ -1,13 +1,13 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import GameLobby from './components/home-ui/GameLobby';
-import { PlayerColourContext } from './components/context/PlayerColourContext';
+import { PlayerColourContext } from './context/PlayerColourContext';
 import SignIn from './components/auth/SignIn';
 import SignUp from './components/auth/SignUp';
 import PlayerProfilePage from './components/profile/PlayerProfilePage';
-import { ProfilePicUrlContext } from './components/context/ProfilePicUrlContext';
+import { ProfilePicUrlContext } from './context/ProfilePicUrlContext';
 
-function App(): JSX.Element {
+const App: React.FC = () => {
   // Keep track of the colours that are already selected
   const [selectedColours, setSelectedColours] = React.useState([]);
   const [url, setUrl] = React.useState('');
@@ -38,6 +38,6 @@ function App(): JSX.Element {
       </ProfilePicUrlContext.Provider>
     </div>
   );
-}
+};
 
 export default App;

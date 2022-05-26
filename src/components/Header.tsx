@@ -79,7 +79,7 @@ const Header: React.FC = () => {
               <Button
                 component={RouterLink}
                 to='/signin'
-                color='inherit'
+                color='secondary'
                 variant='contained'
               >
                 Sign In

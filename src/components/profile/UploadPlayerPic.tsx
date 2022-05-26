@@ -9,7 +9,7 @@ import PlayerAvatar from './PlayerAvatar';
 import { auth, storage } from '../../firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
-import { ProfilePicUrlContext } from '../context/ProfilePicUrlContext';
+import { ProfilePicUrlContext } from '../../context/ProfilePicUrlContext';
 
 const UploadPlayerPic = () => {
   const [user] = useAuthState(auth);
@@ -47,11 +47,10 @@ const UploadPlayerPic = () => {
       (error) => {
         console.log(error);
       },
-      () => {
+      async () => {
         // Upload completed successfully, now we can get the download URL
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          changeProfilePicUrl(downloadURL);
-        });
+        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+        changeProfilePicUrl(downloadURL);
         setIsSuccess(true);
       }
     );
