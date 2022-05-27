@@ -14,7 +14,8 @@ const Player: React.FC<Props> = ({ playerId }) => {
     // GET request using fetch inside useEffect React hook
     const fetchPlayer = async () => {
       const response = await fetch(
-        'https://us-central1-game-lobby-training-db0fb.cloudfunctions.net/players/' +
+        // 'https://us-central1-game-lobby-training-db0fb.cloudfunctions.net/players/' +
+        'http://localhost:5001/game-lobby-training-db0fb/us-central1/players/' +
           playerId
       );
       const data = await response.json();

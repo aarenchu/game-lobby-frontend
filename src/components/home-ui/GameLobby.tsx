@@ -14,7 +14,8 @@ const GameLobby: React.FC = () => {
     const fetchColours = async () => {
       try {
         const response: Response = await fetch(
-          'https://us-central1-game-lobby-training-db0fb.cloudfunctions.net/players/'
+          // 'https://us-central1-game-lobby-training-db0fb.cloudfunctions.net/players/'
+          'http://localhost:5001/game-lobby-training-db0fb/us-central1/players/'
         );
         const data = await response.json();
         setPlayers(data);

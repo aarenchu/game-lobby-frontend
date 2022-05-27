@@ -44,7 +44,8 @@ const registerWithEmailAndPassword = async (username, email, password) => {
     };
 
     const response = await fetch(
-      'https://us-central1-game-lobby-training-db0fb.cloudfunctions.net/players/',
+      // 'https://us-central1-game-lobby-training-db0fb.cloudfunctions.net/players/',
+      'http://localhost:5001/game-lobby-training-db0fb/us-central1/players/',
       requestOptions
     );
 
